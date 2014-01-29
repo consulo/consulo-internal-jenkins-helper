@@ -1,0 +1,7 @@
+<idea-plugin>
+	<name>Vulcan helper</name>
+
+	<extensions defaultExtensionNs="com.intellij">
+		<compiler implementation="org.mustbe.consulo.vulcanHelper.compiler.PluginVersionUpdater" order="before artifactsCompiler" />
+	</extensions>
+</idea-plugin>
