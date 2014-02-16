@@ -18,7 +18,7 @@ import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
 import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.EmptyValidityState;
-import com.intellij.openapi.compiler.Validator;
+import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
@@ -33,7 +33,7 @@ import com.intellij.uiDesigner.GuiDesignerConfiguration;
  * @since 29.01.14
  */
 @Logger
-public class PluginVersionUpdater implements Validator
+public class PluginVersionUpdater implements PackagingCompiler
 {
 	public static class MyItem implements ProcessingItem
 	{
@@ -208,5 +208,11 @@ public class PluginVersionUpdater implements Validator
 	private boolean isConsuloOrganizationProject()
 	{
 		return myProject.getName().startsWith("consulo");
+	}
+
+	@Override
+	public void processOutdatedItem(CompileContext compileContext, String s, @Nullable ValidityState validityState)
+	{
+
 	}
 }
