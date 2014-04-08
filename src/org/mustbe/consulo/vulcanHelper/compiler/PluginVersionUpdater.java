@@ -2,6 +2,7 @@ package org.mustbe.consulo.vulcanHelper.compiler;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +39,12 @@ public class PluginVersionUpdater implements PackagingCompiler
 	public static class MyItem implements ProcessingItem
 	{
 		private final VirtualFile myVirtualFile;
+		private final boolean myApplicationInfo;
 
-		public MyItem(VirtualFile virtualFile)
+		public MyItem(VirtualFile virtualFile, boolean applicationInfo)
 		{
 			myVirtualFile = virtualFile;
+			myApplicationInfo = applicationInfo;
 		}
 
 		@NotNull
@@ -62,6 +65,7 @@ public class PluginVersionUpdater implements PackagingCompiler
 	private static final String META_INF_PLUGIN_XML = "META-INF/plugin.xml";
 
 	private static final String BUILD_NUMBER = System.getProperty("vulcan.build.number");
+	private static final String CONSULO_BUILD_NUMBER = System.getProperty("vulcan.consulo.build.number");
 	private final Project myProject;
 
 	public PluginVersionUpdater(Project project)
@@ -78,30 +82,43 @@ public class PluginVersionUpdater implements PackagingCompiler
 			return ProcessingItem.EMPTY_ARRAY;
 		}
 
+		ProductionContentFolderTypeProvider srcType = ProductionContentFolderTypeProvider.getInstance();
+		ProductionResourceContentFolderTypeProvider resType = ProductionResourceContentFolderTypeProvider.getInstance();
+
 		List<ProcessingItem> list = new ArrayList<ProcessingItem>();
 		ModuleManager moduleManager = ModuleManager.getInstance(compileContext.getProject());
 		for(Module module : moduleManager.getModules())
 		{
-			VirtualFile compilerOutput = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput
-					(ProductionResourceContentFolderTypeProvider.getInstance());
+			VirtualFile compilerOutput = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(resType);
 
 			if(compilerOutput != null)
 			{
 				VirtualFile fileByRelativePath = compilerOutput.findFileByRelativePath(META_INF_PLUGIN_XML);
 				if(fileByRelativePath != null)
 				{
-					list.add(new MyItem(fileByRelativePath));
+					list.add(new MyItem(fileByRelativePath, false));
 				}
 			}
 
-			compilerOutput = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(ProductionContentFolderTypeProvider.getInstance());
+			compilerOutput = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(resType);
+
+			if(compilerOutput != null)
+			{
+				VirtualFile fileByRelativePath = compilerOutput.findFileByRelativePath("idea/ConsuloApplicationInfo.xml");
+				if(fileByRelativePath != null)
+				{
+					list.add(new MyItem(fileByRelativePath, true));
+				}
+			}
+
+			compilerOutput = ModuleCompilerPathsManager.getInstance(module).getCompilerOutput(srcType);
 
 			if(compilerOutput != null)
 			{
 				VirtualFile fileByRelativePath = compilerOutput.findFileByRelativePath(META_INF_PLUGIN_XML);
 				if(fileByRelativePath != null)
 				{
-					list.add(new MyItem(fileByRelativePath));
+					list.add(new MyItem(fileByRelativePath, false));
 				}
 			}
 		}
@@ -120,24 +137,59 @@ public class PluginVersionUpdater implements PackagingCompiler
 		{
 			try
 			{
-				VirtualFile file = processingItem.getFile();
+				MyItem myItem = (MyItem) processingItem;
+
+				VirtualFile file = myItem.getFile();
 				byte[] bytes = file.contentsToByteArray();
 
 				Document document = JDOMUtil.loadDocument(bytes);
 				Element rootElement = document.getRootElement();
-				if(!rootElement.getName().equals("idea-plugin"))
-				{
-					continue;
-				}
 
-				Element version = rootElement.getChild("version");
-				if(version != null)
+				if(myItem.myApplicationInfo)
 				{
-					version.setText(BUILD_NUMBER);
+					if(!rootElement.getName().equals("component"))
+					{
+						continue;
+					}
+
+					final String date = new SimpleDateFormat("yyyyMMddHHmm").format(System.currentTimeMillis());
+					Element ideaVersion = rootElement.getChild("build");
+					if(ideaVersion != null)
+					{
+						ideaVersion.setAttribute("number", BUILD_NUMBER);
+						ideaVersion.setAttribute("date", date);
+					}
+					else
+					{
+						rootElement.addContent(new Element("build").setAttribute("number", BUILD_NUMBER).setAttribute("date", date));
+					}
 				}
 				else
 				{
-					rootElement.addContent(new Element("version").setText(BUILD_NUMBER));
+					if(!rootElement.getName().equals("idea-plugin"))
+					{
+						continue;
+					}
+
+					Element version = rootElement.getChild("version");
+					if(version != null)
+					{
+						version.setText(BUILD_NUMBER);
+					}
+					else
+					{
+						rootElement.addContent(new Element("version").setText(BUILD_NUMBER));
+					}
+
+					Element ideaVersion = rootElement.getChild("idea-version");
+					if(ideaVersion != null)
+					{
+						ideaVersion.setAttribute("since-build", CONSULO_BUILD_NUMBER);
+					}
+					else
+					{
+						rootElement.addContent(new Element("idea-version").setAttribute("since-build", CONSULO_BUILD_NUMBER));
+					}
 				}
 
 				file.setBinaryContent(JDOMUtil.printDocument(document, "\n"));
