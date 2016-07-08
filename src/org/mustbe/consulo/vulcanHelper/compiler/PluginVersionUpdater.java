@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.consulo.compiler.ModuleCompilerPathsManager;
-import org.consulo.lombok.annotations.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +27,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.GuiDesignerConfiguration;
+import consulo.lombok.annotations.Logger;
 
 /**
  * @author VISTALL
