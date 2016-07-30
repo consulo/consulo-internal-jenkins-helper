@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.consulo.compiler.ModuleCompilerPathsManager;
@@ -23,7 +24,6 @@ import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.GuiDesignerConfiguration;
@@ -64,6 +64,7 @@ public class PluginVersionUpdater implements PackagingCompiler
 
 	private static final String META_INF_PLUGIN_XML = "META-INF/plugin.xml";
 
+	private static List<String> ourBytecodeVersions = Arrays.asList("1.6", "1.8");
 	private static final String BUILD_NUMBER = System.getProperty("vulcan.build.number");
 	private static final String CONSULO_BUILD_NUMBER = System.getProperty("vulcan.consulo.build.number");
 	private final Project myProject;
@@ -218,9 +219,9 @@ public class PluginVersionUpdater implements PackagingCompiler
 		}
 
 		JavaCompilerConfiguration javaCompilerConfiguration = JavaCompilerConfiguration.getInstance(myProject);
-		if(!Comparing.equal(javaCompilerConfiguration.getProjectBytecodeTarget(), "1.6"))
+		if(!ourBytecodeVersions.contains(javaCompilerConfiguration.getProjectBytecodeTarget()))
 		{
-			LOGGER.error("Java: Bytecode target is not specified or wrong. Need '1.6'");
+			LOGGER.error("Java: Bytecode target is not specified or wrong. Need " + ourBytecodeVersions + "");
 			return false;
 		}
 
