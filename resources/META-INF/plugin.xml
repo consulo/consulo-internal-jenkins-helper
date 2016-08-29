@@ -5,6 +5,6 @@
 	<depends>com.intellij.uiDesigner</depends>
 
 	<extensions defaultExtensionNs="com.intellij">
-		<compiler implementation="org.mustbe.consulo.vulcanHelper.compiler.PluginVersionUpdater" order="before artifactsCompiler" />
+		<compiler implementation="consulo.jenkinsHelper.compiler.PluginVersionUpdater" order="before artifactsCompiler" />
 	</extensions>
 </idea-plugin>

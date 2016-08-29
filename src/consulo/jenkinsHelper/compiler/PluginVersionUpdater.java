@@ -1,4 +1,4 @@
-package org.mustbe.consulo.vulcanHelper.compiler;
+package consulo.jenkinsHelper.compiler;
 
 import java.io.DataInput;
 import java.io.IOException;
