@@ -1,5 +1,6 @@
 <idea-plugin>
-	<name>Vulcan helper</name>
+	<id>consulo.internal.jenkins.helper</id>
+	<name>Consulo Internal Jenkins Helper</name>
 	<depends>org.consulo.java</depends>
 	<depends>com.intellij.uiDesigner</depends>
 
