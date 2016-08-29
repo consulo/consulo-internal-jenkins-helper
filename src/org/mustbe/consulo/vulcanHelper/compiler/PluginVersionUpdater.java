@@ -65,8 +65,8 @@ public class PluginVersionUpdater implements PackagingCompiler
 	private static final String META_INF_PLUGIN_XML = "META-INF/plugin.xml";
 
 	private static List<String> ourBytecodeVersions = Arrays.asList("1.6", "1.8");
-	private static final String BUILD_NUMBER = System.getProperty("vulcan.build.number");
-	private static final String CONSULO_BUILD_NUMBER = System.getProperty("vulcan.consulo.build.number");
+	private static final String BUILD_NUMBER = System.getProperty("cold.build.number");
+	private static final String CONSULO_BUILD_NUMBER = System.getProperty("cold.consulo.build.number");
 	private final Project myProject;
 
 	public PluginVersionUpdater(Project project)
