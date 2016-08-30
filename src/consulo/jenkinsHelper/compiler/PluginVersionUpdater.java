@@ -182,14 +182,14 @@ public class PluginVersionUpdater implements PackagingCompiler
 						rootElement.addContent(new Element("version").setText(BUILD_NUMBER));
 					}
 
-					Element ideaVersion = rootElement.getChild("idea-version");
-					if(ideaVersion != null)
+					Element platformVersion = rootElement.getChild("platformVersion");
+					if(platformVersion != null)
 					{
-						ideaVersion.setAttribute("since-build", CONSULO_BUILD_NUMBER);
+						platformVersion.setText(CONSULO_BUILD_NUMBER);
 					}
 					else
 					{
-						rootElement.addContent(new Element("idea-version").setAttribute("since-build", CONSULO_BUILD_NUMBER));
+						rootElement.addContent(new Element("platformVersion").setText(CONSULO_BUILD_NUMBER));
 					}
 				}
 
