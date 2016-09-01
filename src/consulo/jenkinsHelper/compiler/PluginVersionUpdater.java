@@ -20,6 +20,7 @@ import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
@@ -28,6 +29,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.GuiDesignerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.lombok.annotations.Logger;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
 import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 
@@ -226,6 +229,21 @@ public class PluginVersionUpdater implements PackagingCompiler
 		if(!isConsuloOrganizationProject())
 		{
 			return true;
+		}
+
+		Module[] affectedModules = compileScope.getAffectedModules();
+		for(Module affectedModule : affectedModules)
+		{
+			ModuleExtension<?> extension = ModuleUtilCore.getExtension(affectedModule, "consulo-plugin");
+			if(extension instanceof ModuleExtensionWithSdk)
+			{
+				String sdkName = ((ModuleExtensionWithSdk) extension).getSdkName();
+				if("Consulo 1.SNAPSHOT".equals(sdkName))
+				{
+					LOGGER.error("ConsuloDevKit: 'Consulo 1.SNAPSHOT' is obsolete and not used, migrate to 'Consulo SNAPSHOT' instead");
+					return false;
+				}
+			}
 		}
 
 		JavaCompilerConfiguration javaCompilerConfiguration = JavaCompilerConfiguration.getInstance(myProject);
