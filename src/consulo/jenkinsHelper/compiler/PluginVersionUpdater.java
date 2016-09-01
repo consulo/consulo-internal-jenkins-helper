@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.consulo.compiler.ModuleCompilerPathsManager;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mustbe.consulo.roots.impl.ProductionContentFolderTypeProvider;
-import org.mustbe.consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
@@ -27,7 +24,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.GuiDesignerConfiguration;
+import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.lombok.annotations.Logger;
+import consulo.roots.impl.ProductionContentFolderTypeProvider;
+import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
 
 /**
  * @author VISTALL
