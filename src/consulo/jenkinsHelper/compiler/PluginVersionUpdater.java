@@ -24,6 +24,8 @@ import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.projectRoots.Sdk;
+import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.GuiDesignerConfiguration;
@@ -66,7 +68,7 @@ public class PluginVersionUpdater implements PackagingCompiler
 
 	private static List<String> ourBytecodeVersions = Arrays.asList("1.6", "1.8");
 	private static final String BUILD_NUMBER = System.getProperty("cold.build.number");
-	private static final String CONSULO_BUILD_NUMBER = System.getProperty("cold.consulo.build.number");
+
 	private final Project myProject;
 
 	public PluginVersionUpdater(Project project)
@@ -134,6 +136,14 @@ public class PluginVersionUpdater implements PackagingCompiler
 			return ProcessingItem.EMPTY_ARRAY;
 		}
 
+		String consuloVersion = "SNAPSHOT";
+
+		Sdk sdk = SdkTable.getInstance().findSdk("Consulo SNAPSHOT");
+		if(sdk != null)
+		{
+			consuloVersion = sdk.getVersionString();
+		}
+
 		for(ProcessingItem processingItem : processingItems)
 		{
 			try
@@ -185,11 +195,11 @@ public class PluginVersionUpdater implements PackagingCompiler
 					Element platformVersion = rootElement.getChild("platformVersion");
 					if(platformVersion != null)
 					{
-						platformVersion.setText(CONSULO_BUILD_NUMBER);
+						platformVersion.setText(consuloVersion);
 					}
 					else
 					{
-						rootElement.addContent(new Element("platformVersion").setText(CONSULO_BUILD_NUMBER));
+						rootElement.addContent(new Element("platformVersion").setText(consuloVersion));
 					}
 				}
 
