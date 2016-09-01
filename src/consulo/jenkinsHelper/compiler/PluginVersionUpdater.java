@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.consulo.compiler.ModuleCompilerPathsManager;
+import org.consulo.module.extension.ModuleExtension;
+import org.consulo.module.extension.ModuleExtensionWithSdk;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +25,7 @@ import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
+import com.intellij.openapi.module.ModuleUtilCore;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
@@ -226,6 +229,21 @@ public class PluginVersionUpdater implements PackagingCompiler
 		if(!isConsuloOrganizationProject())
 		{
 			return true;
+		}
+
+		Module[] affectedModules = compileScope.getAffectedModules();
+		for(Module affectedModule : affectedModules)
+		{
+			ModuleExtension<?> extension = ModuleUtilCore.getExtension(affectedModule, "consulo-plugin");
+			if(extension instanceof ModuleExtensionWithSdk)
+			{
+				String sdkName = ((ModuleExtensionWithSdk) extension).getSdkName();
+				if("Consulo 1.SNAPSHOT".equals(sdkName))
+				{
+					LOGGER.error("ConsuloDevKit: 'Consulo 1.SNAPSHOT' is obsolete and not used, migrate to 'Consulo SNAPSHOT' instead");
+					return false;
+				}
+			}
 		}
 
 		JavaCompilerConfiguration javaCompilerConfiguration = JavaCompilerConfiguration.getInstance(myProject);
