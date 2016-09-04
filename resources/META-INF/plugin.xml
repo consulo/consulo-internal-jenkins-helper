@@ -1,7 +1,7 @@
 <idea-plugin>
 	<id>consulo.internal.jenkins.helper</id>
 	<name>Consulo Internal Jenkins Helper</name>
-	<depends>org.consulo.java</depends>
+	<depends>consulo.java</depends>
 	<depends>com.intellij.uiDesigner</depends>
 
 	<extensions defaultExtensionNs="com.intellij">

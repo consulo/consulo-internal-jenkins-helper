@@ -86,7 +86,7 @@ public class PluginVersionUpdater implements PackagingCompiler
 		ProductionContentFolderTypeProvider srcType = ProductionContentFolderTypeProvider.getInstance();
 		ProductionResourceContentFolderTypeProvider resType = ProductionResourceContentFolderTypeProvider.getInstance();
 
-		List<ProcessingItem> list = new ArrayList<ProcessingItem>();
+		List<ProcessingItem> list = new ArrayList<>();
 		ModuleManager moduleManager = ModuleManager.getInstance(compileContext.getProject());
 		for(Module module : moduleManager.getModules())
 		{
