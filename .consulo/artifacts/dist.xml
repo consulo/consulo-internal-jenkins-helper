@@ -2,9 +2,9 @@
   <artifact name="dist">
     <output-path>$PROJECT_DIR$/out/artifacts/dist</output-path>
     <root id="root">
-      <element id="directory" name="internal-vulcan-helper">
+      <element id="directory" name="consulo.internal.jenkins.helper">
         <element id="directory" name="lib">
-          <element id="zip-archive" name="internal-vulcan-helper.jar">
+          <element id="zip-archive" name="consulo.internal.jenkins.helper.jar">
             <element id="module-output" name="consulo-internal-jenkins-helper" />
             <element id="module-production-resource-output" name="consulo-internal-jenkins-helper" />
           </element>
