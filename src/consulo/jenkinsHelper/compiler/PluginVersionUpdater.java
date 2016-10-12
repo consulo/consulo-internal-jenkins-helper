@@ -1,6 +1,7 @@
 package consulo.jenkinsHelper.compiler;
 
 import java.io.DataInput;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.SdkTable;
 import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.GuiDesignerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
@@ -54,7 +56,12 @@ public class PluginVersionUpdater implements PackagingCompiler
 
 		@NotNull
 		@Override
-		public VirtualFile getFile()
+		public File getFile()
+		{
+			return VfsUtilCore.virtualToIoFile(myVirtualFile);
+		}
+
+		public VirtualFile getVirtualFile()
 		{
 			return myVirtualFile;
 		}
@@ -153,7 +160,7 @@ public class PluginVersionUpdater implements PackagingCompiler
 			{
 				MyItem myItem = (MyItem) processingItem;
 
-				VirtualFile file = myItem.getFile();
+				VirtualFile file = myItem.getVirtualFile();
 				byte[] bytes = file.contentsToByteArray();
 
 				Document document = JDOMUtil.loadDocument(bytes);
@@ -292,7 +299,7 @@ public class PluginVersionUpdater implements PackagingCompiler
 	}
 
 	@Override
-	public void processOutdatedItem(CompileContext compileContext, String s, @Nullable ValidityState validityState)
+	public void processOutdatedItem(CompileContext compileContext, File file, @Nullable ValidityState validityState)
 	{
 
 	}
