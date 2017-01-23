@@ -19,6 +19,7 @@ import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.EmptyValidityState;
 import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtilCore;
@@ -30,7 +31,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.GuiDesignerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.lombok.annotations.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.roots.impl.ProductionContentFolderTypeProvider;
@@ -40,9 +40,10 @@ import consulo.roots.impl.ProductionResourceContentFolderTypeProvider;
  * @author VISTALL
  * @since 29.01.14
  */
-@Logger
 public class PluginVersionUpdater implements PackagingCompiler
 {
+	private static final Logger LOGGER = Logger.getInstance(PluginVersionUpdater.class);
+
 	public static class MyItem implements ProcessingItem
 	{
 		private final VirtualFile myVirtualFile;
