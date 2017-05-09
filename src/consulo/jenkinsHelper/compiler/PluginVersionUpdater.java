@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import com.intellij.compiler.impl.javaCompiler.JavaCompilerConfiguration;
 import com.intellij.openapi.compiler.CompileContext;
 import com.intellij.openapi.compiler.CompileScope;
-import com.intellij.openapi.compiler.CompilerManager;
 import com.intellij.openapi.compiler.EmptyValidityState;
 import com.intellij.openapi.compiler.PackagingCompiler;
 import com.intellij.openapi.compiler.ValidityState;
@@ -280,12 +279,6 @@ public class PluginVersionUpdater implements PackagingCompiler
 			return false;
 		}
 		return true;
-	}
-
-	@Override
-	public void init(@NotNull CompilerManager compilerManager)
-	{
-
 	}
 
 	@Override
